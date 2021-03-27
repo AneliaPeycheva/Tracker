@@ -1,0 +1,352 @@
+<div class="overview-header">
+    <div class="back-holder">      
+            <div class="back-button" routerLink="/projects"></div>               
+    </div>  
+    <ul class="tabs-list">
+        <li class="tabs-item"><span routerLinkActive="active" routerLink="/overview" >Бърз преглед</span></li>
+        <li class="tabs-item"><span>Времева линия</span></li>
+        <li class="tabs-item"><span class="tasks" routerLink="/notes" routerLinkActive="active" (click)="loadProjectInNotes(uid)">Задачи</span></li>
+    </ul>     
+    <div class="logout" (click)="dataServ.Logout()"></div>      
+    <div class="member-icon-holder">
+        <div class="member-circle" *ngFor="let member of dataServ.ReturnProjectById(uid).members">
+            <span class="member-icon" [ngStyle]="{ 'background-image':'url(assets/member' + member + '.png)' }"></span>
+        </div>                        
+    </div>   
+</div>  
+<div class="overview-content">
+    <div class="info-section-holder">
+        <div class="main-info-holder">
+            <div class="overview-section-title">Основна информация</div>
+            <div class="project-main-info-row">
+                <div class="project-client-holder ">
+                    <div class="client-logo-holder">
+                        <div class="client-logo">T</div>
+                    </div>                       
+                    <div class="project-client">
+                        <span class="col-label">Клиент</span>
+                        <span class="col-value">{{dataServ.ReturnProjectById(uid).clientId}}</span>                     
+                    </div>                        
+                </div>
+                <div class="project-name-holder">
+                    <div class="project-info">
+                        <span class="col-label">Име на проекта</span>
+                        <span class="col-value">{{dataServ.ReturnProjectById(uid).projectName}}</span>               
+                    </div>
+                </div>
+            </div>
+            <div class="description-row">
+                <div class="col-label">Описание</div>
+                <div class="description">Внимавайте вие, читатели и слушатели, роде български, които обичате 
+                    и вземате присърце своя род и своет българско отечество и желаете да разберете и знаете 
+                    известното за своя български род и за вашите бащи, прадеди и царе и патриарси и светии как
+                     изпърво са живели и прекарвали. делата на вашите бащи, както знаят всички </div>
+            </div>          
+            <div class="more-info-row">
+                <div class="service-holder">
+                    <div class="col-label">Услуги</div>
+                    <div class="col-value" *ngFor="let service of dataServ.ReturnProjectById(uid).type"> {{dataServ.ReturnProjectTypeById(service)}}</div>
+                </div>
+                <div class="project-dates-holder">
+                    <div class="date-to-add-holder">
+                        <div class="date-to-add-label">Добавен</div>
+                        <div class="date-to-add">{{dataServ.ReturnProjectById(uid).created_at}}</div>
+                    </div>
+                    <div class="deadline-holder">
+                        <div class="deadline-label">Краен срок</div>
+                        <div class="deadline">21 дек 2020</div>
+                    </div>
+                </div>
+            </div>   
+            <div class="overview-section-title">Прогрес</div>
+            <div class="project-main-info-row">
+                <div class="project-client-holder">                                         
+                    <div class="project-client">
+                        <span class="col-label">Моментен етап</span>
+                        <div class="badge-holder ">
+                            <span class="badge green" >оферта</span>
+                            <!-- <span class="badge" >{{dataServ.ReturnProjectById(uid).stage}}</span> -->
+                        </div>  
+                    </div>                        
+                </div>
+                <div class="project-progress-holder">
+                    <div class="project-info ">
+                        <span class="col-label">Преминали етапи</span>
+                        <span class="col-value">3 етапи</span>                     
+                    </div>
+                    <div class="btn info-btn ">виж пълна хронология</div>
+                </div>
+            </div>
+            <div class="project-main-info-row">
+                <div class="project-client-holder">                                         
+                    <div class="project-client">
+                        <span class="col-label">Цялостен прогрес</span>
+                        <div class="col-value" style="--progress-width: {{dataServ.ReturnProjectProgress(uid)}}" >
+                            <div class="progressive-bar-container">
+                                <span class="progressive-bar"></span>
+                                <span  class="progress">{{dataServ.ReturnProjectProgress(uid)}}</span>
+                            </div>
+                        </div>                           
+                    </div>                        
+                </div>
+                <div class="project-progress-holder">
+                    <div class="project-info ">
+                        <span class="col-label">Лични задачи</span>
+                        <div class="col-value" style="--personal-progress-width: {{dataServ.ReturnPersonalProgress(uid).personalProgress}}">
+                            <div class="progressive-bar-container personal" >
+                                <span class="progressive-bar personal"></span>
+                                <span  class="progress">{{dataServ.ReturnPersonalProgress(uid).userDoneNotesCount}}/{{dataServ.ReturnPersonalProgress(uid).allNotesForUser}}</span>
+                            </div> 
+                        </div>                  
+                    </div>
+                    <div class="btn info-btn ">отвори задачи</div>
+                </div>
+            </div>
+                       
+        </div>
+        <div class="last-info-holder">
+            <div class="overview-section-title">Последно</div>  
+            <div class="last-info-section">
+                <div class="actions-scroller-holder">
+
+                        <div class="action-card">                   
+                            <div class="action-card-personal-section">
+                                <div class="performer-holder">
+                                    <div class="performer-logo performer1"></div> 
+                                    <div class="performer-action-icon share"></div>
+                                </div> 
+                                <div class="action-card-content-section">
+                                    <span class="performer">Петър Петров</span>
+                                    <span class="action-type">сподели</span>
+                                    <div class="action-document-holder">
+                                        <div class="action-document-icon board"></div>
+                                        <div class="action-document">Име на борд.</div>                                                                        
+                                    </div>
+                                    <span class="action-type">с</span>    
+                                    <span class="performer">Пламен Петров</span> 
+                                </div>                                   
+                            </div>
+                            <div class="action-card-time-section">
+                                <div class="action-time-count">3</div>
+                                <div class="action-time-type">мин</div>
+                            </div>                           
+                        </div>     
+                        <div class="action-card">
+                            <div class="action-card-personal-section">
+                                <div class="performer-holder">
+                                    <div class="performer-logo performer1"></div> 
+                                    <div class="performer-action-icon add"></div>
+                                </div> 
+                                <div class="action-card-content-section">
+                                    <span class="performer">Петър Петров</span>
+                                    <span class="action-type">добави</span>
+                                    <div class="action-document-holder">
+                                        <div class="action-document-icon board"></div>
+                                        <div class="action-document">Име на борд.</div>                                                                        
+                                    </div>
+                                    <span class="action-type"></span>    
+                                    <span class="performer"></span> 
+                                </div>                                   
+                            </div>
+                            <div class="action-card-time-section">
+                                <div class="action-time-count">2</div>
+                                <div class="action-time-type">часа</div>
+                            </div>                           
+                        </div>     
+                        <div class="action-card">
+                            <div class="action-card-personal-section">
+                                <div class="performer-holder">
+                                    <div class="performer-logo performer2"></div> 
+                                    <div class="performer-action-icon check"></div>
+                                </div> 
+                                <div class="action-card-content-section">
+                                    <span class="performer">Пламен Петров</span>
+                                    <span class="action-type">изпълни</span>
+                                    <div class="action-document-holder">
+                                        <div class="action-document-icon task"></div>
+                                        <div class="action-document">Име на задача</div>                                                                        
+                                    </div>
+                                    <span class="action-type"></span>    
+                                    <span class="performer"></span> 
+                                </div>                                   
+                            </div>
+                            <div class="action-card-time-section">
+                                <div class="action-time-count">3</div>
+                                <div class="action-time-type">мин</div>
+                            </div>                           
+                        </div>   
+                        <div class="action-card">
+                            <div class="action-card-personal-section">
+                                <div class="performer-holder">
+                                    <div class="performer-logo performer3"></div> 
+                                    <div class="performer-action-icon coment"></div>
+                                </div> 
+                                <div class="action-card-content-section">
+                                    <span class="performer">Лиляна Николова</span>
+                                    <span class="action-type">коментира</span>
+                                    <div class="action-document-holder">
+                                        <div class="action-document-icon board"></div>
+                                        <div class="action-document">Име на борд.</div>                                                                        
+                                    </div>
+                                    <span class="action-type"></span>    
+                                    <span class="performer"></span> 
+                                </div>                                   
+                            </div>
+                            <div class="action-card-time-section">
+                                <div class="action-time-count">3</div>
+                                <div class="action-time-type">мин</div>
+                            </div>                           
+                        </div>      
+                        <div class="action-card">
+                            <div class="action-card-personal-section">
+                                <div class="performer-holder">
+                                    <div class="performer-logo performer3"></div> 
+                                    <div class="performer-action-icon edit"></div>
+                                </div> 
+                                <div class="action-card-content-section">
+                                    <span class="performer">Лиляна Николова</span>
+                                    <span class="action-type">редактира</span>
+                                    <div class="action-document-holder">
+                                        <div class="action-document-icon board"></div>
+                                        <div class="action-document">Име на борд.</div>                                                                        
+                                    </div>
+                                    <span class="action-type"></span>    
+                                    <span class="performer"></span> 
+                                </div>                                   
+                            </div>
+                            <div class="action-card-time-section">
+                                <div class="action-time-count">3</div>
+                                <div class="action-time-type">мин</div>
+                            </div>                           
+                        </div>    
+                        <div class="action-card">
+                            <div class="action-card-personal-section">
+                                <div class="performer-holder">
+                                    <div class="performer-logo performer3"></div> 
+                                    <div class="performer-action-icon delete"></div>
+                                </div> 
+                                <div class="action-card-content-section">
+                                    <span class="performer">Лиляна Николова</span>
+                                    <span class="action-type">изтри</span>
+                                    <div class="action-document-holder">
+                                        <div class="action-document-icon board"></div>
+                                        <div class="action-document">Име на борд.</div>                                                                        
+                                    </div>
+                                    <span class="action-type"></span>    
+                                    <span class="performer"></span> 
+                                </div>                                   
+                            </div>
+                            <div class="action-card-time-section">
+                                <div class="action-time-count">3</div>
+                                <div class="action-time-type">мин</div>
+                            </div>                           
+                        </div>    
+                      
+                 </div>
+            </div> 
+        </div>
+        <div class="documentation-holder">
+            <div class="overview-section-title">Документация</div>
+            <div class="documents-section">
+                <div class="documents-scroller-holder">
+                    <div class="documents-holder">
+                   
+                        <div class="document">
+                            <div class="document-icon svg"></div>
+                            <div class="document-details">
+                                <div class="document-title">iCON-или по дълго от това</div>
+                                <div class="document-info-holder">
+                                    <div class="time-icon"></div>
+                                    <div class="document-date">20 окт 2020</div>                                
+                                </div>                            
+                            </div>
+                            <div class="document-change-icons-holder">
+                                <div class="update-icon"></div>
+                                <div class="delete-icon"></div>
+                                <div class="download-icon"></div>
+                            </div>                          
+                        </div>
+                        <div class="document">
+                            <div class="document-icon"></div>
+                            <div class="document-details">
+                                <div class="document-title">iCON-или по дълго от това дълто име</div>
+                                <div class="document-info-holder">
+                                    <div class="time-icon"></div>
+                                    <div class="document-date">20 окт 2020</div>                                
+                                </div>                            
+                            </div> 
+                            <div class="document-change-icons-holder">
+                                <div class="update-icon"></div>
+                                <div class="delete-icon"></div>
+                                <div class="download-icon"></div>
+                            </div>                         
+                        </div>
+                        <div class="document active">
+                            <div class="document-icon img"></div>
+                            <div class="document-details">
+                                <div class="document-title">iCON-или по дълго от това</div>
+                                <div class="document-info-holder">
+                                    <div class="time-icon"></div>
+                                    <div class="document-date">20 окт 2020</div>                                
+                                </div>                                                        
+                            </div>   
+                            <div class="document-change-icons-holder">
+                                <div class="update-icon"></div>
+                                <div class="delete-icon"></div>
+                                <div class="download-icon"></div>
+                            </div>                     
+                        </div>
+                        <div class="document">
+                            <div class="document-icon svg"></div>
+                            <div class="document-details">
+                                <div class="document-title">iCON-или по дълго от това</div>
+                                <div class="document-info-holder">
+                                    <div class="time-icon"></div>
+                                    <div class="document-date">20 окт 2020</div>                                
+                                </div>                            
+                            </div>
+                            <div class="document-change-icons-holder">
+                                <div class="update-icon"></div>
+                                <div class="delete-icon"></div>
+                                <div class="download-icon"></div>
+                            </div>                          
+                        </div>
+                        <div class="document">
+                            <div class="document-icon svg"></div>
+                            <div class="document-details">
+                                <div class="document-title">iCON-или по дълго от това</div>
+                                <div class="document-info-holder">
+                                    <div class="time-icon"></div>
+                                    <div class="document-date">20 окт 2020</div>                                
+                                </div>                            
+                            </div>
+                            <div class="document-change-icons-holder">
+                                <div class="update-icon"></div>
+                                <div class="delete-icon"></div>
+                                <div class="download-icon"></div>
+                            </div>                          
+                        </div>
+                        <div class="document">
+                            <div class="document-icon svg"></div>
+                            <div class="document-details">
+                                <div class="document-title">iCON-или по дълго от това</div>
+                                <div class="document-info-holder">
+                                    <div class="time-icon"></div>
+                                    <div class="document-date">20 окт 2020</div>                                
+                                </div>                            
+                            </div>
+                            <div class="document-change-icons-holder">
+                                <div class="update-icon"></div>
+                                <div class="delete-icon"></div>
+                                <div class="download-icon"></div>
+                            </div>                          
+                        </div>
+                        
+                      
+                    </div>           
+                </div>
+            </div> 
+        </div>
+    </div>   
+</div>         
+

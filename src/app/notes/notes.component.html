@@ -1,0 +1,207 @@
+<div class="modal" *ngIf="modal.open">
+    <div class="backdrop"></div>
+
+    <!-- <div class="modal-note" *ngIf="modal.cntx == 'add-note'">
+        <div class="header">Добавяне на задача</div>         
+        <div class="input-field-wrapper">    
+            <span class="label" for="">Текст на задача</span>                             
+            <input class="field" type="text" [(ngModel)]="modal.obj.title" >    
+            <span class="label" for="">Борд</span>             
+            <select [(ngModel)]="modal.obj.board">
+                <option value=''>Избери борд</option>
+                <option *ngFor="let board of dataServ.ReturnBoards(uid)" value="{{board.uid}}">
+                    {{board.title}}</option>                    
+            </select>                           
+            <span class="label" for="">Тип задача</span>     
+            <select [(ngModel)]="modal.obj.type">
+                <option value=''>Избери тип задача</option>
+                <option *ngFor="let type of dataServ.ReturnNoteTypes()" value="{{type.name}}">
+                    {{type.name}}</option>                    
+            </select>        
+            <span class="label" for="">Описание</span>    
+            <textarea  rows="6" cols="50" [(ngModel)]="modal.obj.description">              
+            </textarea>        
+        </div> 
+        <div class="button-holder">
+                <div class="btn secondary-btn" type="submit" (click)="closeModal()" >ОТКАЗ</div> 
+                <div class="btn main-btn" type="submit" (click)="createNote()">ДОБАВИ</div>  
+        </div>       
+    </div> -->
+
+    <div class="modal-note" *ngIf="modal.cntx == 'edit-note'">
+        <div class="header">Редактиране на задача</div>         
+        <div class="input-field-wrapper">    
+            <span class="label" for="">Текст на задача</span>                             
+            <input class="field" type="text" [(ngModel)]="modal.obj.title" >    
+            <span class="label" for="">Борд</span>             
+            <select [(ngModel)]="modal.obj.board">
+                <option value=''>Избери борд</option>
+                <option *ngFor="let board of dataServ.ReturnBoards(uid)" value="{{board.uid}}">
+                    {{board.title}}</option>                    
+            </select>                           
+            <span class="label" for="">Тип задача</span>     
+            <select [(ngModel)]="modal.obj.type">
+                <option value=''>Избери тип задача</option>
+                <option *ngFor="let type of dataServ.ReturnNoteTypes()" value="{{type.name}}">
+                    {{type.name}}</option>                    
+            </select>        
+            <span class="label" for="">Описание</span>    
+            <textarea  rows="6" cols="50" [(ngModel)]="modal.obj.description">              
+            </textarea>        
+        </div> 
+        <div class="button-holder">
+                <div class="btn secondary-btn" type="submit" (click)="closeModal()" >ОТКАЗ</div> 
+                <div class="btn main-btn" type="submit" (click)="EditCurrentNote()">ПРОМЕНИ</div>  
+        </div>       
+    </div>
+
+    <div class="modal-note" *ngIf="modal.cntx == 'info-note'">
+        <div class="header">Информация за задача</div>         
+        <div class="label gray">{{modal.obj.title}}</div>
+        <div class="header">Описание</div>
+        <div class="label gray">{{modal.obj.description}}</div>
+        <div class="header">Създадена на</div>
+        <div class="label gray">{{modal.obj.created_at}}</div>
+        <div class="header">Членове</div>        
+        <div class="member-icon-holder" *ngIf="modal.obj.members[0] != ''">
+            <div class="member-circle" *ngFor="let member of modal.obj.members">
+                <span class="member-icon" [ngStyle]="{ 'background-image':'url(assets/member' + member + '.png)' }"></span>
+            </div>                        
+        </div>     
+        <div class="button-holder">
+                <div class="btn main-btn" type="submit" (click)="closeModal()">ЗАТВОРИ</div>              
+        </div>       
+    </div>
+
+</div>
+<div class="overview-header">
+    <div class="back-holder">      
+            <div class="back-button" routerLink="/projects"></div>               
+    </div>  
+    <ul class="tabs-list">
+        <li class="tabs-item"><span routerLink="/overview" routerLinkActive="active" (click)="loadProjectOverview(uid)">Бърз преглед</span></li>
+        <li class="tabs-item"><span>Времева линия</span></li>
+        <li class="tabs-item"><span class="tasks" routerLink="/notes" routerLinkActive="active">Задачи</span></li>
+    </ul>  
+    <div class="logout" (click)="dataServ.Logout()"></div>      
+    <div class="member-icon-holder">
+        <div class="member-circle" *ngFor="let member of dataServ.ReturnProjectById(uid).members">
+            <span class="member-icon" [ngStyle]="{ 'background-image':'url(assets/member' + member + '.png)' }"></span>
+        </div>                        
+    </div>  
+</div>  
+
+<div class="tasks-page-holder">        
+    <!-- <div class="tasks-header">      
+        <div class="custom-select">
+            <select [(ngModel)]="memberId">
+                <option value=''>Избери член</option>
+                <option value="member" *ngFor="let member of dataServ.ReturnProjectById(uid).members">{{member}}</option>                       
+              </select>
+        </div>           
+        <div class="add-card-button" (click)="openModal('add-note', { title:'', board:'', type:'', description:'' })">Добави задача</div>
+        <div class="search-bar-holder">
+            <input class="search-content" type="text" placeholder="Търси">               
+            <span class="search-icon"></span>
+        </div>
+    </div>   -->
+    <!-- <div class="tasks-content">
+        <div class="tasks-holder" cdkDropListGroup>
+        
+                <div class="section" *ngFor="let board of dataServ.ReturnBoards(uid);let i = index" cdkDropList [cdkDropListData]="dataServ.ReturnNotes(board.uid,uid)" (cdkDropListDropped)="dataServ.drop($event, board.uid)" >
+                    <div class="section-title">{{board.title}}</div>
+                    <div class="section-content" >       
+                        <div class="task-card"  [cdkDragData]="note" *ngFor="let note of dataServ.ReturnNotes(board.uid,uid)" cdkDrag >
+                          <div class="task-card-wrapper" (click)="openModal('info-note', note)" >
+                                <div class="task-card-title">{{note.title}}</div>
+                                <div class="task-card-delete-icon" (click)="dataServ.DeleteNote(note.uid)"></div>
+                                <div class="task-card-content">      
+                                    <div class="member-icon-holder" *ngIf="note.members.length > 0">
+                                        <div class="member-circle" *ngFor="let member of note.members">
+                                            <span class="member-icon" [ngStyle]="{ 'background-image':'url(assets/member' + member + '.png)' }"></span>
+                                        </div>                        
+                                    </div>                   
+                                    <div class="task-type badge" [ngClass]="{ 'red':note.type === 'fix', 'blue':note.type === 'design', 'green':note.type === 'research', 'purple':note.type ==='test' }">{{note.type}}</div>
+                                </div>
+                          </div>                         
+                        </div>                               
+                    </div>
+                </div>  
+           
+        </div>           
+    </div>       -->
+    <div class="headline-holder">
+        <div class="headline l">{{dataServ.ReturnProjectById(uid).projectName}}</div>
+    </div>
+    <div class="tasks-content">
+        <div class="tasks-holder" cdkDropListGroup>
+        
+                <div class="section" *ngFor="let board of dataServ.ReturnBoards(uid);let i = index" cdkDropList [cdkDropListData]="dataServ.ReturnNotes(board.uid,uid)" (cdkDropListDropped)="dataServ.drop($event, board.uid)" >
+                    <div class="section-title">{{board.title}}</div>
+                    <div class="more-icon active"></div>
+                   
+                    <div class="section-content" >       
+                        <div class="task-card"  [cdkDragData]="note" *ngFor="let note of dataServ.ReturnNotes(board.uid,uid)" cdkDrag >
+                            <!-- <div class="task-card-wrapper" (click)="openModal('info-note', note)" > -->
+                            <div class="task-card-wrapper"  >
+                                <div class="task-type bar purple"></div> 
+                                <div class="task-type bar pink"></div> 
+                                <div class="task-type-holder">
+                                    <div class="task-type badge s purple">web</div> 
+                                    <div class="task-type badge s pink">mockup</div>  
+                                </div>   
+                                <div class="task-card-title">{{note.title}}</div>
+                                <div class="edit-icon" (click)="openModal('edit-note', note)" ></div>
+                                <!-- <div class="task-card-delete-icon" (click)="dataServ.DeleteNote(note.uid)"></div> -->
+                                <div class="task-card-content">      
+                                    <div class="member-icon-holder" *ngIf="note.members.length > 0">
+                                        <div class="member-circle" *ngFor="let member of note.members">
+                                            <span class="member-icon" [ngStyle]="{ 'background-image':'url(assets/member' + member + '.png)' }"></span>
+                                        </div>                        
+                                    </div>    
+                                    <div class="task-status">готова</div>               
+                                    <!-- <div class="task-type badge" [ngClass]="{ 'red':note.type === 'fix', 'blue':note.type === 'design', 'green':note.type === 'research', 'purple':note.type ==='test' }">{{note.type}}</div> -->
+                                </div>
+                            </div>                         
+                        </div>     
+                        <div class="add-new-note-form-wrapper" *ngIf="addNoteForm && addNoteBoard == board.uid">   
+                            <div class="add-new-note-form">
+                                <input class="new-note-content" type="text" placeholder="Име на задача" [(ngModel)]="noteTitle">
+                            </div> 
+                            <div class="button-holder">
+                                <div class="btn secondary-btn" (click)="CancelOpenNewNote()">отказ</div>
+                                <div class="btn main-btn" (click)="CreateNote(board.uid)" >добави задача</div>
+                            </div>
+                        </div> 
+                        <div class="add-new-note-holder" *ngIf="!addNoteForm || addNoteBoard != board.uid" (click) = "OpenNewNote(board.uid)" >
+                            <div class="add-icon-note" ></div>
+                            <div class="add-new-note-text">Добави нова задача</div>                        
+                        </div>  
+                                                   
+                    </div>
+                </div>  
+                <div class="section" >
+                    <div class="new-section-title"></div>
+                    <div class="more-icon"></div>
+                    <div class="add-board-wrapper">
+                        <div class="add-new-board-holder">
+                            <div class="add-icon-board" (click)="OpenNewBoard()"></div>
+                            <div class="add-new-board-text" >Добави нов борд</div>
+                        </div> 
+                        <div class="add-new-board-form-wrapper" *ngIf="addBoard">
+                            <div class="add-new-board-form">
+                                <input class="new-board-content" type="text" placeholder="Име на борд" [(ngModel)]="boardTitle">
+                            </div> 
+                            <div class="button-holder">
+                                <div class="btn secondary-btn" (click)="CancelOpenNewBoard()">отказ</div>
+                                <div class="btn main-btn" (click) ="CreateBoard()" >добави борд</div>
+                            </div>
+                        </div>       
+                    </div>                                                     
+                </div>    
+           
+        </div>           
+    </div>      
+</div>
+
+

@@ -1,0 +1,98 @@
+<div class="upper-section" >
+    <div class="select-project-holder">
+        <div class="upper-section-logo">T</div>
+        <div class="custom-select">
+            <select (change)="loadProject()" [(ngModel)]="selectedProject">
+                <option value=''>Изберете проект</option>
+                <option *ngFor="let proj of dataServ.ReturnProjects(search)" routerLink="/overview" value="{{proj.uid}}">{{proj.clientId}} - {{proj.projectName}}</option>                      
+            </select>            
+        </div>  
+    </div> 
+    <div class="logout" (click)="dataServ.Logout()"></div>
+    <div class="notification-holder">
+        <div class="notification-icon"></div>
+        <div class="notification-count-label">+2</div>
+    </div>
+    <div class="upper-avatar-holder">
+        <!-- <div class="avatar-logo"></div> -->
+        <div class="member-icon-holder">
+            <div class="member-circle" >
+                <span class="member-icon" [ngStyle]="{ 'background-image':'url(assets/member' + dataServ.currentUser + '.png)' }"></span>
+            </div>                      
+        </div> 
+        <div class="avatar-username"> {{dataServ.currentUserName}}</div>
+    </div>  
+    <div class="search-bar-holder">
+        <input class="search-content" type="text" placeholder="Търси" [(ngModel)]="search">
+        <span class="search-icon"></span>               
+    </div>         
+</div>
+<div class="content-section" >
+    <div class="projects-holder">
+        <div class="projects-main-title">Проекти</div>
+        <div class="cards-holder">
+             <div class="row-header">
+                     <div class="col-lg-3 col-md-2 col-sm-6 col-xs-hidden">Клиент</div>
+                     <div class="col-lg-2 col-md-2 col-sm-6 col-xs-hidden">Име на проекта</div>
+                     <div class="col-lg-2 col-md-2 col-sm-hidden col-xs-hidden">Услуги</div>
+                     <div class="col-lg-1 col-md-1 col-sm-hidden col-xs-hidden">Етап</div>                        
+                     <div class="col-lg-1 col-md-1 col-sm-hidden col-xs-hidden">Лични задачи</div>  
+                     <div class="col-lg-1 col-md-1 col-sm-hidden col-xs-hidden">Прогрес</div>  
+                     <div class="col-lg-2 col-md-2 col-sm-hidden col-xs-hidden">Членове</div>                        
+             </div>    
+             <!-- <div class="card" *ngFor="let project of dataServ.ReturnProjects(); let i=index;" (click)="loadProjectByClick(project.uid)" routerLink="/overview" routerLinkActive="active">    -->
+             <div class="card" *ngFor="let project of dataServ.ReturnProjects(search); let i=index;"  [ngClass] = "{ 'active':project.pinned == true }"  >              
+                <div class="card-item col-lg-3 col-md-2 col-sm-6 col-xs-hidden pin-before"  (click)="dataServ.pinTheCard(project)" >                        
+                     <span class="name-label">{{project.clientId}}</span>
+                 </div>
+                 <div class="card-item col-lg-2 col-md-2 col-sm-hidden col-xs-hidden" (click)="loadProjectByClick(project.uid)">
+                     <span class="type-label" >{{project.projectName}}</span>
+                 </div>   
+                 <div class="card-item col-lg-2 col-md-2 col-sm-hidden col-xs-hidden" (click) = "loadProjectByClick(project.uid)">
+                     <div class="card-service-holder">
+                        <span class="service-type" *ngFor="let service of project.type"> {{dataServ.ReturnProjectTypeById(service)}}</span>
+                        <!-- <span class="service-type" >{{project.type}}</span> -->
+                        <!-- <div class="service-count-label">+2</div> -->
+                     </div>                        
+                </div>       
+                <div class="card-item col-lg-1 col-md-1 col-sm-hidden col-xs-hidden" (click) = "loadProjectByClick(project.uid)">
+                    <div class="badge-holder">
+                        <span class="badge" [ngClass] = "{ 'purple':project.stageId == 1, 'green':project.stageId == 2, 'blue':project.stageId == 3, 'red':project.stageId == 4, 'yellow':project.stageId == 5,'pink':project.stageId == 6 }">{{project.stage}}</span>
+                    </div>                        
+                </div>     
+            <div class="card-item col-lg-1 col-md-1 col-sm-hidden col-xs-hidden"  style="--personal-progress-width: {{dataServ.ReturnPersonalProgress(project.uid).personalProgress}}" *ngIf = "project.stage == 'разработка' " (click)="loadProjectByClick(project.uid)">
+                    <div class="progressive-bar-container personal">
+                        <span class="progressive-bar personal"></span>
+                        <span  class="progress">{{dataServ.ReturnPersonalProgress(project.uid).userDoneNotesCount}}/{{dataServ.ReturnPersonalProgress(project.uid).allNotesForUser}}</span>
+                    </div>                                         
+                </div>     
+                <div class="card-item col-lg-1 col-md-1 col-sm-hidden col-xs-hidden" *ngIf = "project.stage != 'разработка' " (click)="loadProjectByClick(project.uid)">
+                    <div class="progressive-bar-container">
+                        <span class="progressive-bar"></span>
+                        <span  class="progress">в очакване</span>
+                    </div>                                     
+                </div>    
+                 <div class="card-item col-lg-1 col-md-1 col-sm-hidden col-xs-hidden"  style="--progress-width: {{dataServ.ReturnProjectProgress(project.uid)}}" *ngIf = "project.stage == 'разработка' ">
+                     <div class="progressive-bar-container">
+                         <span class="progressive-bar"></span>
+                         <span  class="progress">{{dataServ.ReturnProjectProgress(project.uid)}}</span>
+                     </div>                                         
+                 </div>   
+                 <div class="card-item col-lg-1 col-md-1 col-sm-hidden col-xs-hidden" *ngIf = "project.stage != 'разработка' " (click)="loadProjectByClick(project.uid)">
+                    <div class="progressive-bar-container">
+                        <span class="progressive-bar"></span>
+                        <span  class="progress">в очакване</span>
+                    </div>                                     
+                </div> 
+                 <div class="card-item col-lg-2 col-md-2 col-sm-hidden col-xs-hidden" (click)="loadProjectByClick(project.uid)">   
+                    <div class="member-icon-holder">
+                        <div class="member-circle" *ngFor="let member of project.members">
+                            <span class="member-icon" [ngStyle]="{ 'background-image':'url(assets/member' + member + '.png)' }"></span>
+                        </div>                      
+                    </div>           
+                </div>                                                       
+             </div>            
+                          
+        </div>       
+     </div>
+</div>
